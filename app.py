@@ -57,6 +57,10 @@ if __name__ == '__main__':
         if not expired_text:
             easygui.msgbox("Operation canceled!", title)
             exit()
+    refresh_secs = easygui.integerbox("Enter refresh rate in seconds", title, default=30)
+    if not refresh_secs:
+        easygui.msgbox("Operation canceled!", title)
+        exit()
     sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, default=60)
 
     def on_open():
@@ -71,18 +75,27 @@ if __name__ == '__main__':
     def on_fail():
         logging.info("Still closed!")
 
+    print("Observer: ", observe_type)
+    print("Refresh rate (seconds): ", refresh_secs)
+    if expired_text: print("Expired date: ", expired_text)
+    print("Sound alarm: ", "Enabled" if sound_alarm else "Disabled")
+    print("Sound alarm dureation (Seconds): ", sound_alarm)
+
+    print("\n( Enter Ctrl+C to Stop )")
+    print("============================================")
+
     
     if observe_type == 'Banner (Selenium)':    
         observers.observer_selenium_banner(
             expired_text=expired_text,
-            refresh_time_secs = 5,
+            refresh_time_secs = refresh_secs,
             onopen= on_open,
             onfail= on_fail 
             )
     elif observe_type == 'Banner (Hidden)':
         observers.observer_bs4_banner(
             expired_text=expired_text,
-            refresh_time_secs = 5,
+            refresh_time_secs = refresh_secs,
             onopen= on_open,
             onfail= on_fail 
             )
