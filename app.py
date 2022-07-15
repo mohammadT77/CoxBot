@@ -4,6 +4,7 @@ import logging
 from win10toast import ToastNotifier
 import winsound
 import easygui
+import threading
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s')
@@ -49,9 +50,10 @@ if __name__ == '__main__':
     sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, default=60)
 
     def on_open():
-
+        
         if sound_alarm:
-            play_sound(sound_alarm)
+            alarm_thread = threading.Thread(target=play_sound, args=(sound_alarm,))
+            alarm_thread.start()
 
         toast = ToastNotifier()
         toast.show_toast(
