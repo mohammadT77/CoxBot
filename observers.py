@@ -45,7 +45,7 @@ def observer_bs4_banner(expired_text, refresh_time_secs, onopen, onfail):
         spanElem = elem.find('span')
         span_text = spanElem.text
         
-        if expired_text in span_text:
+        if expired_text not in span_text:
             onopen()
             break
         else:

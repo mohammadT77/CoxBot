@@ -1,6 +1,7 @@
 import observers
 import logging
 from win10toast import ToastNotifier
+import winsound
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s')
@@ -29,13 +30,25 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s')
 if __name__ == '__main__':
 
     def on_open():
-        toast = ToastNotifier()
-        toast.show_toast(
-            "vaqte sefarat",
-            "vaqt",
-            duration = 20,
-            threaded = True,
-            )
+
+        def play_sound(secs=None):
+            x = 200
+            for i in range(secs if secs is not None else 100000):
+                winsound.Beep(x+400, 333)
+                winsound.Beep(x+200, 333)
+                winsound.Beep(x, 334)
+                if i%2: x += 50
+                if x >= 1000: x = 200
+
+        play_sound(10)
+
+        # toast = ToastNotifier()
+        # toast.show_toast(
+        #     "vaqte sefarat",
+        #     "vaqt",
+        #     duration = 20,
+        #     threaded = True,
+        #     )
 
 
     def on_fail():
@@ -43,7 +56,7 @@ if __name__ == '__main__':
 
 
     observers.observer_bs4_banner(
-        expired_text="from 17th July",
+        expired_text="from 16th July",
         refresh_time_secs = 5,
         onopen= on_open,
         onfail= on_fail 
