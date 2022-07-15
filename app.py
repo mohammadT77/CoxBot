@@ -11,13 +11,23 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s')
 
 
 def play_sound(secs=None):
-            x = 200
-            for i in range(secs if secs is not None else 100000):
-                winsound.Beep(x+400, 333)
-                winsound.Beep(x+200, 333)
-                winsound.Beep(x, 334)
-                if i%2: x += 50
-                if x >= 1000: x = 200
+    x = 200
+    for i in range(secs if secs is not None else 100000):
+        winsound.Beep(x+400, 333)
+        winsound.Beep(x+200, 333)
+        winsound.Beep(x, 334)
+        if i%2: x += 50
+        if x >= 1000: x = 200
+
+def show_notiftoast():
+    toast = ToastNotifier()
+    toast.show_toast(
+        "Appoinments are opened to book now!!",
+        "Check www.ckgsir.com",
+        threaded = False,
+        )
+
+
 
 # def send_sms(text, receivers: list):
         
@@ -55,13 +65,8 @@ if __name__ == '__main__':
             alarm_thread = threading.Thread(target=play_sound, args=(sound_alarm,))
             alarm_thread.start()
 
-        toast = ToastNotifier()
-        toast.show_toast(
-            "Appoinments are opened to book now!!",
-            "Check www.ckgsir.com",
-            duration = 20,
-            threaded = True,
-            )
+        show_notiftoast()
+        
 
     def on_fail():
         logging.info("Still closed!")
