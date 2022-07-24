@@ -38,19 +38,24 @@ def observer_bs4_banner(expired_text, refresh_time_secs, onopen, onfail):
     
     
     while True:
-        page = requests.get("https://www.ckgsir.com")
+        try:
+            page = requests.get("https://www.ckgsir.com")
     
-        soup = BeautifulSoup(page.text, 'html.parser')
-        elem = soup.find_all("div", {"class": "marq"})[0]
-        spanElem = elem.find('span')
-        span_text = spanElem.text
+            soup = BeautifulSoup(page.text, 'html.parser')
+            elem = soup.find_all("div", {"class": "marq"})[0]
+            spanElem = elem.find('span')
+            span_text = spanElem.text
         
-        if expired_text not in span_text:
-            onopen()
-            break
-        else:
-            onfail()
-        
-        time.sleep(refresh_time_secs) 
+            if expired_text not in span_text:
+                onopen()
+                break
+            else:
+                onfail()
+            
+        except Exception as e:
+            logging.error(e)
+            continue
+        finally:
+            time.sleep(refresh_time_secs) 
             
         

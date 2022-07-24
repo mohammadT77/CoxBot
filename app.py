@@ -47,11 +47,11 @@ def show_notiftoast():
 #         logging.error(e)        
 
 if __name__ == '__main__':
-    title="CoxBot: Config"
+    title="CoxBot - Banner Observer"
     
     observe_choices = ['Banner (Hidden)', 'Banner (Selenium)', 'Appoinment calender']
 
-    observe_type = easygui.buttonbox("Select the observer you need", title, choices=observe_choices)
+    observe_type = 'Banner (Hidden)' #easygui.buttonbox("Select the observer you need", title, choices=observe_choices)
     if observe_type in ['Banner (Selenium)', 'Banner (Hidden)']:
         expired_text = easygui.enterbox("IMPORTANT!\nEnter the current date mentioned in the banner.\n(Any changes in the banner means opening new times)", title, default='from 17th July')
         if not expired_text:
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     if not refresh_secs:
         easygui.msgbox("Operation canceled!", title)
         exit()
-    sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, default=60)
+    sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, 300, 10, 100000)
 
     def on_open():
         
