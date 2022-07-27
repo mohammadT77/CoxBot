@@ -1,14 +1,34 @@
 from random import choices
-import observers
-import logging
-from win10toast import ToastNotifier
 import winsound
 import easygui
-import threading
-
+import time
+import logging
+from bs4 import BeautifulSoup
+import requests
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s')
 
+def observer_bs4_banner(expired_text, refresh_time_secs, onopen, onfail):
+    while True:
+        try:
+            page = requests.get("https://www.ckgsir.com")
+    
+            soup = BeautifulSoup(page.text, 'html.parser')
+            elem = soup.find_all("div", {"class": "marq"})[0]
+            spanElem = elem.find('span')
+            span_text = spanElem.text
+        
+            if expired_text not in span_text:
+                onopen()
+                break
+            else:
+                onfail()
+            
+        except Exception as e:
+            logging.error(e)
+            continue
+        finally:
+            time.sleep(refresh_time_secs) 
 
 def play_sound(secs=None):
     x = 200
@@ -19,13 +39,13 @@ def play_sound(secs=None):
         if i%2: x += 50
         if x >= 1000: x = 200
 
-def show_notiftoast():
-    toast = ToastNotifier()
-    toast.show_toast(
-        "Appoinments are opened to book now!!",
-        "Check www.ckgsir.com",
-        threaded = False,
-        )
+# def show_notiftoast():
+#     toast = ToastNotifier()
+#     toast.show_toast(
+#         "Appoinments are opened to book now!!",
+#         "Check www.ckgsir.com",
+#         threaded = False,
+#         )
 
 
 if __name__ == '__main__':
@@ -42,15 +62,11 @@ if __name__ == '__main__':
     if not refresh_secs:
         easygui.msgbox("Operation canceled!", title)
         exit()
-    sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, 30000, 10, 100000)
+    sound_alarm = easygui.integerbox("Sound alarm duration:", title, 30000, 10, 100000) or 30000
 
     def on_open():
-        
-        if sound_alarm:
-            alarm_thread = threading.Thread(target=play_sound, args=(sound_alarm,))
-            alarm_thread.start()
-
-        show_notiftoast()
+        logging.info("OPEN!!!")
+        play_sound(sound_alarm)
         
 
     def on_fail():
@@ -66,26 +82,13 @@ if __name__ == '__main__':
     print("============================================")
 
     
-    # if observe_type == 'Banner (Selenium)':    
-    #     observers.observer_selenium_banner(
-    #         expired_text=expired_text,
-    #         refresh_time_secs = refresh_secs,
-    #         onopen= on_open,
-    #         onfail= on_fail 
-    #         )
     
-    observers.observer_bs4_banner(
+    observer_bs4_banner(
         expired_text=expired_text,
         refresh_time_secs = refresh_secs,
         onopen= on_open,
         onfail= on_fail 
         )
-    # elif observe_choices == 'Appoinment calender':
-    #     easygui.msgbox("Not yet implemented!", title)        
-    #     exit()
-    # else:
-    #     easygui.msgbox("Operation canceled!", title)
-    #     exit()
 
 
 
