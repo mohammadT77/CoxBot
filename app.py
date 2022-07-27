@@ -28,40 +28,21 @@ def show_notiftoast():
         )
 
 
-
-# def send_sms(text, receivers: list):
-        
-#     try:
-#         apikey = '344D6A4B4E546E3779566964492B4162535558776A48392F4C5455363372546A6E555A4A5861595747626B3D'
-#         api = kavenegar.KavenegarAPI(apikey)
-#         params = {
-#             'receptor': ','.join(receivers),
-#             'message': 'Kaveh specialized Web service '
-#         }   
-    
-#         response = api.sms_send(params)
-#         logging.info("SMS response: "+response)
-#     except kavenegar.APIException as e: 
-#         logging.error(e)
-#     except kavenegar.HTTPException as e: 
-#         logging.error(e)        
-
 if __name__ == '__main__':
     title="CoxBot - Banner Observer"
     
-    observe_choices = ['Banner (Hidden)', 'Banner (Selenium)', 'Appoinment calender']
+    observe_choices = ['Banner (Hidden)']
 
     observe_type = 'Banner (Hidden)' #easygui.buttonbox("Select the observer you need", title, choices=observe_choices)
-    if observe_type in ['Banner (Selenium)', 'Banner (Hidden)']:
-        expired_text = easygui.enterbox("IMPORTANT!\nEnter the current date mentioned in the banner.\n(Any changes in the banner means opening new times)", title, default='from 17th July')
-        if not expired_text:
-            easygui.msgbox("Operation canceled!", title)
-            exit()
-    refresh_secs = easygui.integerbox("Enter refresh rate in seconds", title, default=30)
+    expired_text = easygui.enterbox("IMPORTANT!\nEnter the current date mentioned in the banner.\n(Any changes in the banner means opening new times)", title, default='from 17th July')
+    if not expired_text:
+        easygui.msgbox("Operation canceled!", title)
+        exit()
+    refresh_secs = easygui.integerbox("Enter refresh rate in seconds", title, default=20)
     if not refresh_secs:
         easygui.msgbox("Operation canceled!", title)
         exit()
-    sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, 300, 10, 100000)
+    sound_alarm = easygui.integerbox("Do you want to play sound alarm?\nSo enter the duration in seconds.\nOtherwise tap 'Cancel'", title, 30000, 10, 100000)
 
     def on_open():
         
@@ -85,26 +66,26 @@ if __name__ == '__main__':
     print("============================================")
 
     
-    if observe_type == 'Banner (Selenium)':    
-        observers.observer_selenium_banner(
-            expired_text=expired_text,
-            refresh_time_secs = refresh_secs,
-            onopen= on_open,
-            onfail= on_fail 
-            )
-    elif observe_type == 'Banner (Hidden)':
-        observers.observer_bs4_banner(
-            expired_text=expired_text,
-            refresh_time_secs = refresh_secs,
-            onopen= on_open,
-            onfail= on_fail 
-            )
-    elif observe_choices == 'Appoinment calender':
-        easygui.msgbox("Not yet implemented!", title)        
-        exit()
-    else:
-        easygui.msgbox("Operation canceled!", title)
-        exit()
+    # if observe_type == 'Banner (Selenium)':    
+    #     observers.observer_selenium_banner(
+    #         expired_text=expired_text,
+    #         refresh_time_secs = refresh_secs,
+    #         onopen= on_open,
+    #         onfail= on_fail 
+    #         )
+    
+    observers.observer_bs4_banner(
+        expired_text=expired_text,
+        refresh_time_secs = refresh_secs,
+        onopen= on_open,
+        onfail= on_fail 
+        )
+    # elif observe_choices == 'Appoinment calender':
+    #     easygui.msgbox("Not yet implemented!", title)        
+    #     exit()
+    # else:
+    #     easygui.msgbox("Operation canceled!", title)
+    #     exit()
 
 
 
